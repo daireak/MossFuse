@@ -40,8 +40,8 @@ parser.add_argument('--channels_msi', type=int, default=4, help='Number of MSI b
 parser.add_argument('--patch_size', type=int, default=64, help='Training patch size')
 
 # Training settings
-parser.add_argument('--epochs', type=int, default=300, help='Number of training epochs') # 默认改为300
-parser.add_argument('--batch_size', type=int, default=16, help='Batch size')
+parser.add_argument('--epochs', type=int, default=500, help='Number of training epochs') # 默认改为300
+parser.add_argument('--batch_size', type=int, default=2, help='Batch size')
 parser.add_argument('--lr', type=float, default=1e-3, help='Initial learning rate')
 parser.add_argument('--exp_name', type=str, default='PU_Exp', help='Experiment name for saving logs and models')
 parser.add_argument('--gpu', type=str, default='0', help='GPU ID')
@@ -181,7 +181,7 @@ for epoch in range(args.epochs):
         loss_decomp_.append(loss_decomp.data.cpu().numpy())
 
         # 【重要修复 3】: 将遗漏的自监督约束损失（L_SCT）重新加回总 Loss 中
-        loss_SCT = mse_loss_msi + mse_loss_hsi 
+        loss_SCT = mse_loss_msi + mse_loss_hsi + mse_HSI_R + mse_MSI_R
         loss1 = 0.1*loss_decomp + mse_hsi_fhrHSI + mse_msi_fhrHSI + loss_SCT
         
         for name, param in model.named_parameters():
